@@ -61,6 +61,7 @@ public class CreateIndexServiceImpl
     implements CreateIndexService
 {
   private final static String API_VERSION = "1.0";
+  private final static String URL_ENV_PARAM = "REPOSITORY_BASE_URL";
 
   private HelmDataAccess helmDataAccess;
 
@@ -115,7 +116,9 @@ public class CreateIndexServiceImpl
 
   private void createListOfRelativeUrls(final NestedAttributesMap formatAttributes, final ChartEntry chartEntry) {
     List<String> urls = new ArrayList<>();
-    urls.add(String.format("%s-%s.tgz",
+    String baseUrl = System.getenv(URL_ENV_PARAM) != null ? System.getenv(URL_ENV_PARAM) : "";
+    urls.add(String.format("%s%s-%s.tgz",
+        baseUrl,
         formatAttributes.get(NAME, String.class),
         formatAttributes.get(VERSION, String.class)));
     chartEntry.setUrls(urls);
